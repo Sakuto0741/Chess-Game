@@ -45,7 +45,7 @@ public class Pawn extends Piece {
     protected void scanMovePawn(Delta delta, Piece[][] board, Position origin, ArrayList<Position> result){
         for(int i = 1; i <= 2; i++){
             Delta d = new Delta(delta.dCol*i, delta.dRow*i);
-            Position candidate = origin.add(d);
+            Position candidate = origin.add(d, board.length, board[0].length);
             if(candidate == null) return;
 
             if(ChessUtils.isOccupied(board, candidate)){
@@ -57,6 +57,7 @@ public class Pawn extends Piece {
         }
     }
 
+    @Override
     public ArrayList<Position> mov(Piece[][] board, Position position){
         ArrayList<Position> positions = new ArrayList<>();
         scanMovePawn(direction(), board, position, positions);

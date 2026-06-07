@@ -52,7 +52,7 @@ public class Position {
      * @param row The zero-based row index (0 - 7).
      * @return A new Position object with algebraics values.
      */
-    public static Position fromMatrix(int col, int row){
+    public static Position fromMatrix(int row, int col){
         // Maps matrix indices back to 'a'-'h' chars and 1-8 rows
         return new Position((char) ('a' + col), 8 - row);
     }
@@ -93,7 +93,7 @@ public class Position {
         int newCol = toMatrixCol() + delta.dCol;
         int newRow = toMatrixRow() - delta.dRow;
         if(newCol < 0 || newRow < 0) return null;
-        return fromMatrix(newCol, newRow);
+        return fromMatrix(newRow, newCol);
     }
 
     /**
@@ -111,7 +111,7 @@ public class Position {
         int newCol = toMatrixCol() + delta.dCol;
         int newRow = toMatrixRow() - delta.dRow;
         if(newCol < 0 || newRow < 0 || newCol >= maxCol || newRow >= maxRow) return null;
-        return fromMatrix(newCol, newRow);
+        return fromMatrix(newRow, newCol);
     }
 
     /**

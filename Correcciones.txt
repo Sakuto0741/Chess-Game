@@ -1,0 +1,72 @@
+Correcciones realizadas en el proyecto Chess-Game
+
+1. Archivo: src/chess/engine/GameEngine.java
+   - Corrección: el método eventMove() usaba la columna de destino en lugar de la columna de origen para localizar la pieza a mover.
+   - Solución: ahora se obtienen ambas coordenadas desde positionPiece (origen) y se lee la pieza desde esa posición.
+   - Resultado: el motor mueve correctamente la pieza seleccionada y actualiza el turno después de cada movimiento.
+
+2. Archivo: src/chess/util/ChessUtils.java
+   - Corrección: los bucles de búsqueda de piezas recorrían la matriz usando índices invertidos (columnas y filas intercambiados).
+   - Solución: se cambiaron los bucles para iterar primero por las filas (board.length) y luego por las columnas (board[0].length).
+   - Corrección adicional: isEnemy() devolvía NPE cuando la posición era null.
+   - Resultado: la validación de piezas y enemigos ahora funciona correctamente con la representación interna del tablero.
+
+3. Archivo: src/chess/model/Position.java
+   - Corrección: Position.add() construía la nueva posición con parámetros intercambiados al llamar a fromMatrix().
+   - Solución: se corrigió el orden a fromMatrix(newRow, newCol) en ambos métodos add().
+   - Mejora: se añadió validación de entrada estricta para columnas entre 'a' y 'h' y filas entre 1 y 8.
+   - Resultado: el cálculo de posiciones de movimiento es correcto y no genera posiciones fuera del tablero.
+
+4. Archivo: src/chess/model/pieces/Pawn.java
+   - Corrección: scanMovePawn() usaba Position.add(d) sin límites de tablero.
+   - Solución: ahora usa Position.add(d, board.length, board[0].length) para respetar los límites del tablero.
+   - Resultado: los peones generan movimientos válidos y no intentan posiciones fuera del tablero.
+
+5. Archivo: src/chess/model/Piece.java
+   - Corrección: addIfValid() añadía siempre la posición candidata incluso si estaba ocupada por una pieza aliada o enemiga.
+   - Solución: se añadió un return para evitar añadir posiciones inválidas y duplicadas.
+   - Resultado: la generación de movimientos para piezas es más precisa y no incluye destinos inválidos.
+
+6. Archivo: src/test/java/chess/EngineVerification.java
+   - Añadido: un verificador simple de flujo de movimiento de dos jugadores.
+   - Función: comprueba que White mueve P1 de a2 a a3, luego Black mueve P1 de a7 a a6, y que el turno se alterna correctamente.
+   - Resultado: la prueba se ejecutó con éxito y confirmo que el motor maneja turnos alternados.
+
+7. Archivo: src/chess/ui/ConsoleRenderer.java
+   - Corrección: se usaba try-with-resources con Scanner(System.in) dentro de cada método, cerrando System.in accidentalmente entre menús.
+   - Solución: se refactorizó la clase para usar un único Scanner como atributo privado reutilizable (scanner).
+   - Mejora: se agregó el método privado nextInt() que usa el Scanner compartido y consume la línea residual.
+   - Resultado: los menús anidados ahora funcionan correctamente sin cerrar System.in, y la entrada se consume apropiadamente entre iteraciones.
+   - Cambios específicos:
+     * Scanner privado: private final Scanner scanner = new Scanner(System.in)
+     * Método helper: nextInt() para lectura consistente
+     * Todos los métodos (startSection, electionModeGameSection, informationGameModeSection, gameSection, endGameSection, playMove) ahora usan el Scanner compartido
+     * playMove() usa scanner.nextLine() directamente para entrada de texto
+
+8. Archivo: src/test/java/chess/ConsoleRendererVerification.java
+   - Añadido: test harness completo para verificar ConsoleRenderer con entradas simuladas.
+   - Función: simula la entrada del usuario usando ByteArrayInputStream y captura la salida con ByteArrayOutputStream.
+   - Tests incluidos:
+     * testStartSectionExit(): verifica que el menú principal muestra opciones "Start" y "Exit"
+     * testElectionModeBack(): verifica navegación entre menús de selección de modo
+     * testInformationGameModeBack(): verifica el menú de información y retorno al menú principal
+     * testPlayMoveFlow(): verifica que se solicita la pieza y la posición de movimiento
+   - Resultado: verificación exitosa que confirma toda la cadena de menús funciona correctamente.
+
+Funcionamiento después de las correcciones:
+- El juego inicializa el tablero correctamente con el modo estándar.
+- El motor puede localizar piezas de acuerdo al turno activo (White/Black).
+- Los movimientos se calculan y validan con la posición de origen correcta.
+- El turno cambia después de un movimiento válido.
+- Los peones y otras piezas ya no generan destinos inválidos ni se mueven fuera del tablero.
+- La prueba de verificación del motor confirma el flujo básico de dos jugadores.
+- La interfaz de usuario ahora mantiene System.in abierto durante toda la sesión de juego.
+- Los menús anidados funcionan sin interrupciones causadas por cierres de Scanner.
+- La entrada del usuario se consume correctamente entre cada iteración de menú.
+
+Reflejos de cambios en el tablero:
+- Los cambios del tablero se reflejan visualmente en cada ciclo de gameSection().
+- El método printBoard() es llamado automáticamente después de cada movimiento cuando se regresa a gameSection().
+- El test BoardStateVerification confirma que las piezas se mueven correctamente a sus nuevas posiciones.
+- La visualización del tablero mantiene un estado consistente con los datos almacenados en GameEngine.board.
+- El flujo es: playMove() -> eventMove() (actualiza board) -> gameSection() -> printBoard() (muestra cambios)

@@ -34,6 +34,7 @@ public class King extends Piece {
         super.value = Integer.MAX_VALUE;
     }
 
+    @Override
     public ArrayList<Position> mov(Piece[][] board, Position position){
         ArrayList<Position> positions = new ArrayList<>();
         for(Delta d : MOVES){

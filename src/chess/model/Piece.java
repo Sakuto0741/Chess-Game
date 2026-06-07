@@ -12,7 +12,7 @@ import java.util.ArrayList;
  * @version 1.0
  */
 
-public class Piece {
+public abstract class Piece {
     // Identity attributes
     private final int id;
     private final ColorPiece color;
@@ -44,13 +44,14 @@ public class Piece {
      * @param resutl The list where the valid target positions are stored.
      */
     protected void addIfValid(Delta delta, Piece[][] board, Position origin, ArrayList<Position> result){
-        Position candidate = origin.add(delta, board[0].length, board.length);
+        Position candidate = origin.add(delta, board.length, board[0].length);
         if(candidate == null) return;
 
         if(ChessUtils.isOccupied(board, candidate)){
             if(ChessUtils.isEnemy(board, this.getColor(), candidate)){
                 result.add(candidate);
             }
+            return;
         }
         result.add(candidate);
     }
@@ -66,7 +67,7 @@ public class Piece {
      */
     protected void scanDirection(Delta delta, Piece[][] board, Position origin,
                                  ArrayList<Position> result){
-        Position candidate = origin.add(delta, board[0].length, board.length);
+        Position candidate = origin.add(delta, board.length, board[0].length);
         if(candidate == null) return;
 
         if(ChessUtils.isOccupied(board, candidate)){
@@ -82,6 +83,8 @@ public class Piece {
         // Recursibility step for the next scan of the position
         scanDirection(delta, board, origin, result);
     }
+
+    public abstract ArrayList<Position> mov(Piece[][] board, Position position);
 
     /**
      * Gets the movement direction modifier based on the piece's color.

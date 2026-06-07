@@ -29,6 +29,13 @@ public class ColorPiece {
         this.gameTurn = gameTurn;
     }
 
+    @Override
+    public boolean equals(Object obj){
+        if(!(obj instanceof ColorPiece)) return false;
+        ColorPiece other = (ColorPiece) obj;
+        return other.getId() == this.id;
+    }
+
     /** @return The unique numeric identifier for the color. */
     public int getId(){ return this.id; }
 

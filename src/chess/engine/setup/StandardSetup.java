@@ -3,20 +3,20 @@ package chess.engine.setup;
 import chess.model.*;
 import chess.model.pieces.*;
 
-public class StandardSetup implements BoardSetup {
-    public final int cantPlayer = 2;
-    public final int cantPieces = 16;
-    public final int boardSizeCol = 8;
-    public final int boardSizeRow = 8;
-    public final int totalPieces = cantPlayer * cantPieces;
+public class StandardSetup extends  BoardSetup {
+    public StandardSetup(){
+        super("Standar chess", 8, 8, 2, 16, description());
+    }
 
-    public StandardSetup(){}
+    public static String description(){
+        return "";
+    }
 
     @Override
     public Piece[][] generateBoard(){
-        Piece[][] board = new Piece[boardSizeRow][boardSizeCol];
-        ColorPiece white = new ColorPiece(1, "White", new Delta(0, 1), 1);
-        ColorPiece black = new ColorPiece(2, "Black", new Delta(0, -1), 2);
+        Piece[][] board = new Piece[this.rows][this.cols];
+        ColorPiece white = getTurnOrder()[0];
+        ColorPiece black = getTurnOrder()[1];
         
         // Kings Position
         board[7][4] = new King(1, white, true);
@@ -51,5 +51,13 @@ public class StandardSetup implements BoardSetup {
         }
 
         return board;
+    }
+
+    @Override
+    public ColorPiece[] getTurnOrder(){
+        return new ColorPiece[]{
+            new ColorPiece(1, "White", new Delta(0, 1), 1),
+            new ColorPiece(2, "Black", new Delta(0, -1), 2)
+        };
     }
 }

@@ -30,6 +30,7 @@ public class Rook extends Piece {
         super.value = 5;
     }
 
+    @Override
     public ArrayList<Position> mov(Piece[][] board, Position position){
         ArrayList<Position> positions = new ArrayList<>();
         for(Delta d : DIRECTIONS){

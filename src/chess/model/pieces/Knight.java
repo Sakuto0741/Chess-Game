@@ -32,6 +32,7 @@ public class Knight extends Piece {
         super.value = 3;
     }
 
+    @Override
     public ArrayList<Position> mov(Piece[][] board, Position position){
         ArrayList<Position> positions = new ArrayList<>();
         for(Delta d : MOVES){
